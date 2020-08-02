@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 
-import { getProducts } from '../lib/presta-api';
+import { initSession, getProducts } from '../lib/presta-api';
 
 export default function Home({ products }) {
     return (
@@ -50,6 +50,7 @@ export default function Home({ products }) {
 }
 
 Home.getInitialProps = async () => {
+    const session = await initSession();
     const products = await getProducts();
     return products;
 }
