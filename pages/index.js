@@ -1,65 +1,55 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
 
-export default function Home() {
+import { getProducts } from '../lib/presta-api';
+
+export default function Home({ products }) {
     return (
         <div className={styles.container}>
             <Head>
-                <title>Create Next App</title>
+                <title>Presta React | Generate Prestashop customized themes with React and Next.js</title>
+                <meta name="description" content="Generate Presashop customized themes with React and Next.js"></meta>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <main className={styles.main}>
-                <h1 className={styles.title}>
-                Welcome to <a href="https://nextjs.org">Next.js!</a>
+                <h1>
+                    Welcome to <a href="https://www.prestashop.com/">Presta React!</a>
                 </h1>
 
-                <p className={styles.description}>
-                Get started by editing{' '}
-                <code className={styles.code}>pages/index.js</code>
-                </p>
-
-                <div className={styles.grid}>
-                <a href="https://nextjs.org/docs" className={styles.card}>
-                    <h3>Documentation &rarr;</h3>
-                    <p>Find in-depth information about Next.js features and API.</p>
-                </a>
-
-                <a href="https://nextjs.org/learn" className={styles.card}>
-                    <h3>Learn &rarr;</h3>
-                    <p>Learn about Next.js in an interactive course with quizzes!</p>
-                </a>
-
-                <a
-                    href="https://github.com/vercel/next.js/tree/master/examples"
-                    className={styles.card}
-                >
-                    <h3>Examples &rarr;</h3>
-                    <p>Discover and deploy boilerplate example Next.js projects.</p>
-                </a>
-
-                <a
-                    href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    className={styles.card}
-                >
-                    <h3>Deploy &rarr;</h3>
-                    <p>
-                    Instantly deploy your Next.js site to a public URL with Vercel.
-                    </p>
-                </a>
-                </div>
+				<h2>
+                    Generate Prestashop customized themes with React and Next.js
+                </h2>
             </main>
 
-            <footer className={styles.footer}>
-                <a
-                href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                target="_blank"
-                rel="noopener noreferrer"
-                >
-                Powered by{' '}
-                <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-                </a>
-            </footer>
+            <section>
+                <h3>
+                    The products on this store are these...and they're rendered from Prestashop API!
+                </h3>
+
+                <ul>
+                    {products.map(
+                        (product, index) => {
+                            return (
+                                <li key={index}>
+                                    {product.id}
+                                </li>
+                            )
+                        }
+                    )}
+                </ul>
+            </section>
+
+            <style jsx>{`
+                h1, h2{
+                    text-align : center;
+                }
+            `}</style>
         </div>
     )
+}
+
+Home.getInitialProps = async () => {
+    const products = await getProducts();
+    return products;
 }
