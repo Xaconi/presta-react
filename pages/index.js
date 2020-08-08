@@ -1,9 +1,17 @@
 import Head from 'next/head';
+import Cart from '../components/Cart';
 import styles from '../styles/Home.module.css';
 
-import { initSession, getProducts } from '../lib/presta-api';
+import { useEffect } from 'react';
+
+import { initSession, getProducts, addProduct } from '../lib/presta-api';
 
 export default function Home({ products }) {
+
+    useEffect(() => {
+        initSession();
+    });
+
     return (
         <div className={styles.container}>
             <Head>
@@ -11,6 +19,8 @@ export default function Home({ products }) {
                 <meta name="description" content="Generate Presashop customized themes with React and Next.js"></meta>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+
+            <Cart></Cart>
 
             <main className={styles.main}>
                 <h1>
@@ -28,11 +38,14 @@ export default function Home({ products }) {
                 </h3>
 
                 <ul>
-                    {products.map(
+                    {products.products.map(
                         (product, index) => {
                             return (
                                 <li key={index}>
                                     {product.id}
+                                    <button onClick={() => {addProduct(product.id) }}>
+                                        Add Product {product.id}
+                                    </button>
                                 </li>
                             )
                         }
@@ -49,8 +62,13 @@ export default function Home({ products }) {
     )
 }
 
-Home.getInitialProps = async () => {
-    const session = await initSession();
+export async function getServerSideProps({ req }) {
+    console.log("SERVER");
     const products = await getProducts();
-    return products;
+
+    return {
+        props : {
+            products
+        }
+    };
 }
