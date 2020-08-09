@@ -12,10 +12,17 @@ export default function Cart({cart}) {
         setCart(cart);
     });
 
+    let cartProducts = 0;
+    cart?.associations?.cart_rows.map(
+        (element) => {
+            cartProducts += parseInt(element.quantity);
+        }
+    );
+
     return (
         <>
             <p>Cart</p>
-            <p>You have {cart?.associations?.cart_rows.length} items on your cart.</p>
+            <p>You have {cartProducts} items on your cart.</p>
         </>
     )
 }
