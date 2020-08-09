@@ -9,9 +9,8 @@ export default function Cart({cart}) {
     [cart, setCart] = useState(0);
 
     prestaEvents.on('updateCart', function(cart){
-        console.log(cart);
         setCart(cart);
-    })
+    });
 
     return (
         <>
