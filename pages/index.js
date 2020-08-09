@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css';
 
 import { useEffect } from 'react';
 
-import { initSession, getProducts, addProduct } from '../lib/presta-api';
+import { initSession, getProducts, addProduct, removeProductFromCart } from '../lib/presta-api';
 
 export default function Home({ products }) {
 
@@ -45,6 +45,9 @@ export default function Home({ products }) {
                                     {product.id}
                                     <button onClick={() => {addProduct(product.id) }}>
                                         Add Product {product.id}
+                                    </button>
+                                    <button onClick={() => {removeProductFromCart(product.id) }}>
+                                        Remove Product {product.id}
                                     </button>
                                 </li>
                             )
