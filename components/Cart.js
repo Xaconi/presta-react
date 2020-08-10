@@ -1,28 +1,50 @@
 import { prestaEvents } from '../lib/presta-api/presta-api';
-import { useState } from 'react';
+import { getProduct } from '../lib/presta-api/presta-api-product';
+import { useState, useEffect } from 'react';
 
-export default function Cart({cart}) {
+export default function Cart({cart, products}) {
+
+    useEffect(() => {
+        prestaEvents.on('updateCart', async function(cart){
+            setCart(cart);
+
+            let cartProductsInfo = new Array();
+
+            if(cart?.associations?.cart_rows && cart.associations.cart_rows.length > 0) {
+                cartProductsInfo = await Promise.all(
+                    cart?.associations?.cart_rows.map(
+                        async (element) => {
+                            return await getProduct(element.id_product);
+                        }
+                    )
+                );
+            } else {
+                cartProductsInfo = [];
+            }
+
+            setProducts(cartProductsInfo);
+        });
+    }, []);
 
     function setCart(cart) {
     }
 
+    function setProducts(products) {
+    }
+
     [cart, setCart] = useState(0);
-
-    prestaEvents.on('updateCart', function(cart){
-        setCart(cart);
-    });
-
-    let cartProducts = 0;
-    cart?.associations?.cart_rows.map(
-        (element) => {
-            cartProducts += parseInt(element.quantity);
-        }
-    );
+    [products, setProducts] = useState([]);
 
     return (
         <>
             <p>Cart</p>
-            <p>You have {cartProducts} items on your cart.</p>
+            <p>You have {products.length || 0} items on your cart.</p>
+
+            {products.map(
+                (product) => {
+                    return (<p key={product.id}>{product.name[0].value}</p>)
+                }
+            )}
         </>
     )
 }
@@ -32,7 +54,8 @@ export async function getStaticProps() {
 
     return {
         props : {
-            cart : null
+            cart : null,
+            products : []
         }
     }
 }
