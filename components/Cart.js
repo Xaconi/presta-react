@@ -1,4 +1,4 @@
-import { prestaEvents } from '../lib/presta-api';
+import { prestaEvents } from '../lib/presta-api/presta-api';
 import { useState } from 'react';
 
 export default function Cart({cart}) {

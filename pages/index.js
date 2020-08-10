@@ -4,7 +4,8 @@ import styles from '../styles/Home.module.css';
 
 import { useEffect } from 'react';
 
-import { initSession, getProducts, addProduct, removeProductFromCart } from '../lib/presta-api';
+import { initSession, getProducts } from '../lib/presta-api/presta-api';
+import { addProduct, removeProductFromCart } from '../lib/presta-api/presta-api-cart';
 
 export default function Home({ products }) {
 
