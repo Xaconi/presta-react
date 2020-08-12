@@ -35,7 +35,7 @@ export default function Cart({cart, products}) {
     [cart, setCart] = useState(0);
     [products, setProducts] = useState([]);
 
-    const reducer = (accumulator, currentProduct) => accumulator + parseFloat(currentProduct.price);
+    const reducer = (accumulator, currentProduct) => accumulator + parseFloat(currentProduct.price_wt);
 
     return (
         <>
@@ -44,7 +44,7 @@ export default function Cart({cart, products}) {
 
             {products.map(
                 (product) => {
-                    return (<p key={product.id}>{product.name[0].value} - {product.price}</p>)
+                    return (<p key={product.id}>{product.name[0].value} - {product.price_wt}</p>)
                 }
             )}
 
