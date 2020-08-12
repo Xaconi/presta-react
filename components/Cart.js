@@ -14,7 +14,9 @@ export default function Cart({cart, products}) {
                 cartProductsInfo = await Promise.all(
                     cart?.associations?.cart_rows.map(
                         async (element) => {
-                            return await getProduct(element.id_product);
+                            let product = await getProduct(element.id_product);
+                            product.quantity = element.quantity;
+                            return product;
                         }
                     )
                 );
@@ -35,20 +37,21 @@ export default function Cart({cart, products}) {
     [cart, setCart] = useState(0);
     [products, setProducts] = useState([]);
 
-    const reducer = (accumulator, currentProduct) => accumulator + parseFloat(currentProduct.price_wt);
+    const reducerPrice = (accumulator, currentProduct) => accumulator + parseFloat(currentProduct.price_wt * currentProduct.quantity);
+    const reducerQuantity = (accumulator, currentProduct) => accumulator + parseInt(currentProduct.quantity);
 
     return (
         <>
             <p>Cart</p>
-            <p>You have {products.length || 0} items on your cart.</p>
+            <p>You have {products?.reduce(reducerQuantity, 0) || 0} items on your cart.</p>
 
             {products.map(
                 (product) => {
-                    return (<p key={product.id}>{product.name[0].value} - {product.price_wt}</p>)
+                return (<p key={product.id}>{product.quantity}x {product.name[0].value} - {product.price_wt}</p>)
                 }
             )}
 
-            <p>Total: {products?.reduce(reducer, 0)}</p>
+            <p>Total: {products?.reduce(reducerPrice, 0)}</p>
         </>
     )
 }
