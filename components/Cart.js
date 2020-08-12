@@ -37,7 +37,7 @@ export default function Cart({cart, products}) {
     [cart, setCart] = useState(0);
     [products, setProducts] = useState([]);
 
-    const reducerPrice = (accumulator, currentProduct) => accumulator + parseFloat(currentProduct.price_wt * currentProduct.quantity);
+    const reducerPrice = (accumulator, currentProduct) => parseFloat(accumulator) + (parseFloat(currentProduct.price_wt).toFixed(2) * currentProduct.quantity);
     const reducerQuantity = (accumulator, currentProduct) => accumulator + parseInt(currentProduct.quantity);
 
     return (
@@ -47,11 +47,11 @@ export default function Cart({cart, products}) {
 
             {products.map(
                 (product) => {
-                return (<p key={product.id}>{product.quantity}x {product.name[0].value} - {product.price_wt}</p>)
+                return (<p key={product.id}>{product.quantity}x {product.name[0].value} - {parseFloat(product.price_wt).toFixed(2)}</p>)
                 }
             )}
 
-            <p>Total: {products?.reduce(reducerPrice, 0)}</p>
+            <p>Total: {parseFloat(products?.reduce(reducerPrice, 0)).toFixed(2)}</p>
         </>
     )
 }
