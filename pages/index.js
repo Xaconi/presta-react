@@ -66,7 +66,7 @@ export default function Home({ products }) {
     )
 }
 
-export async function getServerSideProps({ req }) {
+export async function getStaticProps({ req }) {
     const products = await getProducts();
 
     return {
