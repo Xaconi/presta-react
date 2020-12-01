@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react';
 
 // Libs
-import { getCategory } from '../lib/presta-api/presta-api-category';
+import { getCategory, getCategoryByURL } from '../lib/presta-api/presta-api-category';
 import { getCategoryProducts } from '../lib/presta-api/presta-api-product';
 import { initSession } from '../lib/presta-api/presta-api';
 
@@ -47,9 +47,11 @@ const Category = ({ categoryData, products }) => {
 
 export default Category;
 
-export async function getServerSideProps({ req }) {
-    const categoryData = await getCategory(3);
-    const products = await getCategoryProducts(3);
+export async function getServerSideProps( context ) {
+    const { category } = context.query;
+    const categoryId = await getCategoryByURL(category);
+    const categoryData = await getCategory(categoryId);
+    const products = await getCategoryProducts(categoryId);
 
     return {
         props : {

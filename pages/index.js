@@ -67,7 +67,6 @@ export default function Home({ products }) {
 }
 
 export async function getServerSideProps({ req }) {
-    console.log("SERVER");
     const products = await getProducts();
 
     return {
