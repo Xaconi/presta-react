@@ -2,7 +2,10 @@ import { prestaEvents } from '../lib/presta-api/presta-api';
 import { getProduct } from '../lib/presta-api/presta-api-product';
 import { useState, useEffect } from 'react';
 
-export default function Cart({cart, products}) {
+export default function Cart() {
+
+    const [cart, setCart] = useState(0);
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
         prestaEvents.on('updateCart', async function(cart){
@@ -28,15 +31,6 @@ export default function Cart({cart, products}) {
         });
     }, []);
 
-    function setCart(cart) {
-    }
-
-    function setProducts(products) {
-    }
-
-    [cart, setCart] = useState(0);
-    [products, setProducts] = useState([]);
-
     const reducerPrice = (accumulator, currentProduct) => parseFloat(accumulator) + (parseFloat(currentProduct.price_wt).toFixed(2) * currentProduct.quantity);
     const reducerQuantity = (accumulator, currentProduct) => accumulator + parseInt(currentProduct.quantity);
 
@@ -57,8 +51,6 @@ export default function Cart({cart, products}) {
 }
 
 export async function getStaticProps() {
-    console.log("CLIENT CART");
-
     return {
         props : {
             cart : null,

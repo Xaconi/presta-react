@@ -19,9 +19,6 @@ const Category = ({ categoryData, products }) => {
         initSession();
     });
 
-    const router = useRouter()
-    const { category } = router.query
-
     return (
         <>
             <Cart />
@@ -57,7 +54,8 @@ export async function getStaticProps( { params } ) {
         props : {
             categoryData,
             products
-        }
+        },
+        revalidate: 1
     };
 }
 
