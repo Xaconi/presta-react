@@ -44,8 +44,9 @@ const Category = ({ categoryData, products }) => {
 
 export default Category;
 
-export async function getStaticProps( { params } ) {
+export async function getStaticProps( { params, locale } ) {
     const { category } = params;
+    console.log({ locale });
     const categoryId = await getCategoryByURL(category);
     const categoryData = await getCategory(categoryId);
     const products = await getCategoryProducts(categoryId);
@@ -61,10 +62,18 @@ export async function getStaticProps( { params } ) {
 
 export async function getStaticPaths() {
     const { categories } = await getCategories();
+    const langs = ['es', 'fr'];
 
-    const paths = categories.map((categoryData) => ({
-        params: { category: categoryData.link_rewrite[0].value },
-    }));
+    let paths = [];
+
+    langs.forEach((lang, indexLang) => {
+        for(const categoryData in categories) {
+            paths.push({
+                params: { category: categories[categoryData].link_rewrite[indexLang].value },
+                locale : lang
+            });
+        }
+    });
 
     return {
         paths,
