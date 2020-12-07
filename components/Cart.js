@@ -1,23 +1,32 @@
+// Libs
 import { prestaEvents } from '../lib/presta-api/presta-api';
 import { getProduct } from '../lib/presta-api/presta-api-product';
+import { getLanguageByIsoCode } from '../lib/presta-api/presta-api-lang';
+
+// Core
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router'
+
 
 export default function Cart() {
 
     const [cart, setCart] = useState(0);
     const [products, setProducts] = useState([]);
 
+    const { locale } = useRouter();
+
     useEffect(() => {
         prestaEvents.on('updateCart', async function(cart){
             setCart(cart);
 
             let cartProductsInfo = new Array();
+            const language = await getLanguageByIsoCode(locale);
 
             if(cart?.associations?.cart_rows && cart.associations.cart_rows.length > 0) {
                 cartProductsInfo = await Promise.all(
                     cart?.associations?.cart_rows.map(
                         async (element) => {
-                            let product = await getProduct(element.id_product);
+                            let product = await getProduct(element.id_product, element.id_product_attribute, language.id);
                             product.quantity = element.quantity;
                             return product;
                         }
@@ -41,7 +50,7 @@ export default function Cart() {
 
             {products.map(
                 (product) => {
-                return (<p key={product.id}>{product.quantity}x {product.name[0].value} - {parseFloat(product.price_wt).toFixed(2)}</p>)
+                return (<p key={product.id}>{product.quantity}x {product.name} - {parseFloat(product.price_wt).toFixed(2)}</p>)
                 }
             )}
 

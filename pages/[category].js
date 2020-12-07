@@ -32,7 +32,7 @@ const Category = ({ categoryData, products }) => {
                         return (
                             <ProductCard
                                 key={index}
-                                name={product.name[0].value}
+                                name={product.name}
                                 id={product.id}
                                 price={product.price_wt} />
                         )
@@ -49,7 +49,7 @@ export async function getStaticProps( { params, locale } ) {
     const { category } = params;
 
     const categoryData = await getCategoryByURL(category, locale);
-    const products = await getCategoryProducts(categoryData.id);
+    const products = await getCategoryProducts(categoryData.id, locale);
 
     return {
         props : {

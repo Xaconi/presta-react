@@ -1,5 +1,4 @@
 import { addProduct } from '../lib/presta-api/presta-api-cart';
-import { useState, useEffect } from 'react';
 
 export default function ProductCard({id, name, price}) {
     return(
