@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { getCategories, getCategory, getCategoryByURL } from '../lib/presta-api/presta-api-category';
 import { getCategoryProducts } from '../lib/presta-api/presta-api-product';
 import { initSession } from '../lib/presta-api/presta-api';
+import { getLangs } from '../lib/presta-api/presta-api-lang';
 
 // Components
 import ProductCard from '../components/ProductCard';
@@ -46,7 +47,7 @@ export default Category;
 
 export async function getStaticProps( { params, locale } ) {
     const { category } = params;
-    console.log({ locale });
+
     const categoryId = await getCategoryByURL(category);
     const categoryData = await getCategory(categoryId);
     const products = await getCategoryProducts(categoryId);
@@ -62,15 +63,15 @@ export async function getStaticProps( { params, locale } ) {
 
 export async function getStaticPaths() {
     const { categories } = await getCategories();
-    const langs = ['es', 'fr'];
+    const langs = await getLangs();
 
     let paths = [];
 
-    langs.forEach((lang, indexLang) => {
+    langs.map((lang, indexLang) => {
         for(const categoryData in categories) {
             paths.push({
                 params: { category: categories[categoryData].link_rewrite[indexLang].value },
-                locale : lang
+                locale : lang.iso_code
             });
         }
     });
