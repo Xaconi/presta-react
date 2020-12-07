@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { getCategories, getCategory, getCategoryByURL } from '../lib/presta-api/presta-api-category';
 import { getCategoryProducts } from '../lib/presta-api/presta-api-product';
 import { initSession } from '../lib/presta-api/presta-api';
-import { getLangs } from '../lib/presta-api/presta-api-lang';
+import { getLanguages } from '../lib/presta-api/presta-api-lang';
 
 // Components
 import ProductCard from '../components/ProductCard';
@@ -23,8 +23,8 @@ const Category = ({ categoryData, products }) => {
     return (
         <>
             <Cart />
-            <p>{categoryData.name[0].value}</p>
-            {parse(categoryData.description[0].value)}
+            <p>{categoryData.name}</p>
+            {parse(categoryData.description)}
 
             <section className="products">
                 {products?.map(
@@ -48,9 +48,8 @@ export default Category;
 export async function getStaticProps( { params, locale } ) {
     const { category } = params;
 
-    const categoryId = await getCategoryByURL(category);
-    const categoryData = await getCategory(categoryId);
-    const products = await getCategoryProducts(categoryId);
+    const categoryData = await getCategoryByURL(category, locale);
+    const products = await getCategoryProducts(categoryData.id);
 
     return {
         props : {
@@ -63,11 +62,11 @@ export async function getStaticProps( { params, locale } ) {
 
 export async function getStaticPaths() {
     const { categories } = await getCategories();
-    const langs = await getLangs();
+    const languages = await getLanguages();
 
     let paths = [];
 
-    langs.map((lang, indexLang) => {
+    languages.map((lang, indexLang) => {
         for(const categoryData in categories) {
             paths.push({
                 params: { category: categories[categoryData].link_rewrite[indexLang].value },
